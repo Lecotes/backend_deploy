@@ -19,7 +19,7 @@ app.use(cors());
 
 app.use(
   cors({
-    origin: 'http://localhost:3001', // Replace with your frontend URL
+    origin: 'https://lecotes.onrender.com:3001', // Replace with your frontend URL
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true, // Allow cookies and credentials
   })
