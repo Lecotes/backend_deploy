@@ -19,12 +19,11 @@ app.use(cors());
 
 app.use(
   cors({
-    origin: 'https://lecotes.onrender.com:3001', // Replace with your frontend URL
+    origin: 'https://lecotes.onrender.com', // Use the deployed frontend URL
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true, // Allow cookies and credentials
   })
 );
-
 
 // Add session middleware
 app.use(
@@ -32,7 +31,7 @@ app.use(
       secret: process.env.SESSION_SECRET, // Use environment variable for secret key
       resave: false, // Don't save session if it hasn't been modified
       saveUninitialized: false, // Don't save empty sessions
-      cookie: { secure: false }, // Set to true if using HTTPS
+      cookie: { secure: process.env.NODE_ENV === 'production' }, // Set to true if using HTTPS
   })
 );
 
