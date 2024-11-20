@@ -20,30 +20,37 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-// Login route
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-      const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-      const user = result.rows[0];
+    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    const user = result.rows[0];
 
-      if (!user) return res.status(400).send('User not found');
+    if (!user) return res.status(400).send('User not found');
 
-      const isValidPassword = await bcrypt.compare(password, user.password);
-      if (!isValidPassword) return res.status(400).send('Invalid credentials');
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) return res.status(400).send('Invalid credentials');
 
-      // Save user in session
-      req.session.userId = user.id; // Ensure this line is present
-      req.session.username = user.username;
+    // Save user in session
+    req.session.userId = user.id; 
+    req.session.username = user.username;
 
-      res.cookie('userId', user.id, { httpOnly: true }); // Optional: Add a cookie for tracking
-      res.status(200).json({ userId: user.id, username: user.username });
+    // Set cookie for tracking
+    res.cookie('userId', user.id, { 
+      httpOnly: true,  
+      secure: process.env.NODE_ENV === 'production', // Secure for production
+      sameSite: 'None', 
+      maxAge: 24 * 60 * 60 * 1000 // 1 day
+    });
+
+    res.status(200).json({ userId: user.id, username: user.username });
   } catch (err) {
-      console.error('Error logging in:', err);
-      res.status(500).send('Error logging in');
+    console.error('Error logging in:', err);
+    res.status(500).send('Error logging in');
   }
 });
+
 
 // Session route
 router.get('/session', (req, res) => {

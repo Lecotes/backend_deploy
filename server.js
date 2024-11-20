@@ -17,13 +17,11 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use(
-  cors({
-    origin: 'https://lecotes.onrender.com', // Use the deployed frontend URL
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true, // Allow cookies and credentials
-  })
-);
+app.use(cors({
+  origin: 'https://lecotes.onrender.com', // Your frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+}));
 
 // Add session middleware
 app.use(
