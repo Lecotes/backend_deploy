@@ -264,6 +264,52 @@ router.post('/reply', async (req, res) => {
     }
 });
 
+// Update an annotation
+router.patch('/:id', async (req, res) => {
+    const { id } = req.params;
+    const { content } = req.body;
 
+    try {
+        const result = await pool.query(
+            `UPDATE annotations 
+             SET content = $1, updated_at = NOW() 
+             WHERE id = $2 RETURNING *`,
+            [content, id]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(404).send('Annotation not found');
+        }
+
+        res.status(200).json(result.rows[0]);
+    } catch (err) {
+        console.error('Error updating annotation:', err);
+        res.status(500).send('Error updating annotation');
+    }
+});
+
+// Update a reply
+router.patch('/reply/:replyId', async (req, res) => {
+    const { replyId } = req.params;
+    const { content } = req.body;
+
+    try {
+        const result = await pool.query(
+            `UPDATE annotation_replies 
+             SET content = $1 
+             WHERE id = $2 RETURNING *`,
+            [content, replyId]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(404).send('Reply not found');
+        }
+
+        res.status(200).json(result.rows[0]);
+    } catch (err) {
+        console.error('Error updating reply:', err);
+        res.status(500).send('Error updating reply');
+    }
+});
 
 module.exports = router;
