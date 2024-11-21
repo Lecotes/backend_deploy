@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 // CORS configuration
 const corsOptions = {
   origin: 'https://lecotes.onrender.com', // Your frontend URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
   credentials: true, // Allow credentials (cookies, authorization headers, etc.)
 };
 
