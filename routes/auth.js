@@ -14,17 +14,6 @@ router.post('/signup', async (req, res) => {
       [email, hashedPassword, username]
     );
 
-        // Save user in session
-        req.session.userId = user.id; 
-        req.session.username = user.username;
-    
-        // Set cookie for tracking
-        res.cookie('userId', user.id, { 
-          httpOnly: true,  
-          secure: process.env.NODE_ENV === 'production', // Secure for production
-          sameSite: 'None', 
-          maxAge: 24 * 60 * 60 * 1000 // 1 day
-        });
 
     res.status(201).json({ userId: result.rows[0].id });
   } catch (err) {
